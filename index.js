@@ -49,25 +49,27 @@ app.post('/login',(req,res) => {
         {
             return res.json({
                 loginSuccess: false,
-                message:"제공괸 이메일에 해당하는 유저가 없습니다."
+                message:"제공된 이메일에 해당하는 유저가 없습니다."
             })
         }
+        //비밀번호 일치 여부 확인
+        user.comparePassword(req.body.password , (err,isMatch) =>{
+            if(!isMatch) 
+            return res.json({loginSuccess:false, message:"비밀번호가 틀렸습니다."})
+
+            //비밀번호가 동일하다면 유저 토큰 생성하기
+            user.generateToken((err, user) =>{
+                if(err) return res.status(400).send(err);
+
+                //토큰을 원하는 위치에 저장한다. -> 쿠키? local? 세션?
+                res.cookie("x_auth", user.token)
+                .status(200)
+                .json({loginSuccess:true, userId: user._id})
+            })            
+        })
     })
 
-    //비밀번호 일치 여부 확인
-    user.comparePassword(req.body.password , (err,isMatch) =>{
-        if(!isMatch) return res.json({loginSuccess:false, message:"비밀번호가 틀렸습니다."})
-    })
 
-    //비밀번호가 동일하다면 유저 토큰 생성하기
-    user.generateToken((err, user) =>{
-        if(err) return res.status(400).send(err);
-
-        //토큰을 원하는 위치에 저장한다. -> 쿠키? local? 세션?
-        res.cookie("x_auth", user.token)
-        .status(200)
-        .json({loginSuccess:true, userId: user._id})
-    })
 
 })
 
