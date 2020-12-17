@@ -2,6 +2,7 @@ const express = require('express')
 const app = express()
 const port = 5000
 
+const {auth} = require("./middleware/auth");
 const {User} = require("./models/User");
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser'); 
@@ -24,7 +25,7 @@ app.get('/', (req, res) => {
   res.send('KST TEST => Hello World! ~~')
 })
 
-app.post('/register',(req,res) => {
+app.post('/api/users/register',(req,res) => {
 
     //회원가입할때 필요한 정보들을 client에서 가져오면
     // 그것들을 DB에 넣어준다
@@ -42,7 +43,7 @@ app.post('/register',(req,res) => {
     })
 })
 
-app.post('/login',(req,res) => {
+app.post('/api/users/login',(req,res) => {
     //요청된 email 을 db에서 찾는다
     User.findOne({ email: req.body.email }, (err, user) =>{
         if(!user)
@@ -69,10 +70,56 @@ app.post('/login',(req,res) => {
         })
     })
 
+})
 
+app.get('/api/users/auth', auth, (req,res) =>{
+    //여기까지 미들웨어를 통과해 왔다는 얘기는 Authentication 이 ture라는말
+    res.status(200).json({
+        _id: req.user._id,
+        isAdmin: req.user.role === 0? false : true,
+        isAuth:true,
+        email :req.user.email,
+        name: req.user.name,
+        lastname:req.user.lastname,
+        role: req.user.role,
+        image: req.user.image
+    })
 
 })
 
+app.get('/api/users/logout', auth, (req, res) => {
+    // console.log('req.user', req.user)
+    const id_test = req.userInfo._id;
+    const id_test1 = req.user._id;
+
+    console.log("test-> ",id_test);
+    console.log("test1 ->",id_test1);
+
+    User.findOneAndUpdate({ _id: req.userInfo._id },
+      { token: "" }
+      , (err, userInfo) => {
+        if (err) return res.json({ success: false, err });
+        return res.status(200).send({
+          success: true
+        })
+      })
+  })
+
+// app.get('/api/users/logout', auth, (req, res) => {
+//     console.log('index.js====================================');
+//     console.log("auth : ", auth);
+//     console.log("user : ", req.user);
+//     console.log("user_ID: ", req.user._id);
+//     console.log('====================================');   
+//     User.findOneAndUpdate({ _id: req.uesr._id },
+//         { token: "" }
+//         ,(err, user)=>{
+//             if(err) return res.json({success: false, err});
+//             return res.status(200).send({
+//                 success:true
+//             })
+//         })
+//     })
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
