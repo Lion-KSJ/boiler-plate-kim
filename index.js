@@ -87,39 +87,34 @@ app.get('/api/users/auth', auth, (req,res) =>{
 
 })
 
-app.get('/api/users/logout', auth, (req, res) => {
-    // console.log('req.user', req.user)
-    const id_test = req.userInfo._id;
-    const id_test1 = req.user._id;
-
-    console.log("test-> ",id_test);
-    console.log("test1 ->",id_test1);
-
-    User.findOneAndUpdate({ _id: req.userInfo._id },
-      { token: "" }
-      , (err, userInfo) => {
-        if (err) return res.json({ success: false, err });
-        return res.status(200).send({
-          success: true
-        })
-      })
-  })
-
 // app.get('/api/users/logout', auth, (req, res) => {
-//     console.log('index.js====================================');
-//     console.log("auth : ", auth);
-//     console.log("user : ", req.user);
-//     console.log("user_ID: ", req.user._id);
-//     console.log('====================================');   
-//     User.findOneAndUpdate({ _id: req.uesr._id },
-//         { token: "" }
-//         ,(err, user)=>{
-//             if(err) return res.json({success: false, err});
-//             return res.status(200).send({
-//                 success:true
-//             })
+//     // console.log('req.user', req.user)
+//     const id_test = req.userInfo._id;
+//     const id_test1 = req.user._id;
+
+//     console.log("test-> ",id_test);
+//     console.log("test1 ->",id_test1);
+
+//     User.findOneAndUpdate({ _id: req.userInfo._id },
+//       { token: "" }
+//       , (err, userInfo) => {
+//         if (err) return res.json({ success: false, err });
+//         return res.status(200).send({
+//           success: true
 //         })
-//     })
+//       })
+//   })
+
+app.get('/api/users/logout', auth, (req, res) => {
+    User.findOneAndUpdate({ _id: req.user._id },
+        { token: "" }
+        ,(err, user)=>{
+            if(err) return res.json({success: false, err});
+            return res.status(200).send({
+                success:true
+            })
+        })
+    })
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)

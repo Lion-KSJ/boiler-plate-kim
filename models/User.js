@@ -4,9 +4,7 @@ const saltRounds = 10;
 const jwt = require('jsonwebtoken');
 
 const userSchema = mongoose.Schema({
-    // _id:{
-    //     type:String
-    // },
+
     name:{
         type:String,
         maxlength:50
@@ -86,30 +84,28 @@ userSchema.methods.generateToken = function(cb){
 
 }
 
-userSchema.statics.findByToken = function(token, cb) {
+// userSchema.statics.findByToken = function(token, cb) {
 
-    var user = this;
-    var userInfo = this;
-   
-    //토큰을 decode 한다
-    jwt.verify(token,'secretToken',function(err, decoded){
+//     var user = this;
+//     var test = this;
 
-        //userid를 이용하여 유저를 찾은 후
-        //클라이언트언트에서 가져온 token과 db에 보관된 토큰이 일치하는지 확인
-        userInfo.findOne({" _id" : decoded, "token": token}, function(err,user){
+//     //토큰을 decode 한다
+//     jwt.verify(token,'secretToken',function(err, decoded){
+
+//         //userid를 이용하여 유저를 찾은 후
+//         //클라이언트언트에서 가져온 token과 db에 보관된 토큰이 일치하는지 확인
+//         user.findOne({" _id" : decoded, "token": token}, function(err,user){
             
-        // console.log("User.js-------------");
-        // console.log("token-> ", token);
-        // console.log("user-> ", decoded);
-        console.log("user-> ", user);
-        console.log("userInfo-> ", userInfo);
-        console.log("User.js-------------");
+//         console.log("1. User.js-------------");
+//         console.log("user-> ", user);
+//         console.log("test-> ", test);
+//         console.log("1. User.js-------------");
 
-            if(err) return cb(err);
-            cb(null, userInfo);
-        })
-    })
-}
+//             if(err) return cb(err);
+//             cb(null, user);
+//         })
+//     })
+// }
 
 const User = mongoose.model('User', userSchema);
 
