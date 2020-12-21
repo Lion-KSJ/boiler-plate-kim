@@ -116,6 +116,9 @@ app.get('/api/users/logout', auth, (req, res) => {
         })
     })
 
+
+app.get('/api/hello', (req, res) => res.send('KST api call TEST') );
+
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
 })

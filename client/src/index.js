@@ -5,6 +5,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
+  //보여주고싶은 컴포넌트를 넣으면 화면에 보임
   <React.StrictMode>
     <App />
   </React.StrictMode>,
